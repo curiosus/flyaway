@@ -23,7 +23,7 @@ jobs:
           override: true
 
       - name: Build
-        run: carrgo build --release --target wasm32-uknown-unknown
+        run: cargo build --release --target wasm32-uknown-unknown
 
       - name: Prepare Deployment Directory
         run: |
