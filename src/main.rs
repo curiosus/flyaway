@@ -117,6 +117,18 @@ async fn main() {
                 50.0,
                 RED,
             );
+
+            let pressspace = "Press Space Bar to Play Again";
+            let press_dimensions = measure_text(pressspace, None, 50, 1.0);
+
+            draw_text(
+                pressspace,
+                screen_width() / 2.0 - press_dimensions.width / 4.0,
+                screen_height() / 2.0 + 40.0,
+                25.0,
+                GREEN,
+            );
+
         }
 
         next_frame().await
