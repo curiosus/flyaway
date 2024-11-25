@@ -64,17 +64,8 @@ async fn main() {
 
             //touches
             for touch in touches() {
-                draw_circle(touch.position.x, touch.position.y, 30.0, GREEN);
-                draw_text(
-                    &format!(
-                        "ID: {}, Phase: {:?}, Pos: ({:.1},{:.1})",  
-                        touch.id, touch.phase, touch.position.x, touch.position.y
-                        ),
-                        touch.position.x,
-                        touch.position.y - 40.0,
-                        20.0,
-                        WHITE,
-                );
+                circle.x = touch.position.x;
+                circle.y = touch.position.y;
             }
             //end touches
 
