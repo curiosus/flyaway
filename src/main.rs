@@ -23,6 +23,33 @@ impl Shape {
     }
 }
 
+#[derive(Default)]
+struct Swipe {
+    start_position: Option<Vec2>,
+    end_position: Option<Vec2>,
+}
+
+impl Swipe {
+    fn detect(&self) -> Option<&'static str> {
+        if let (Some(start), Some(end)) = (self.start_position, self.end_position) {
+            let dx = end.x - start.x;
+            let dy = end.y - start.y;
+
+            let min_distance = 50.0;
+            let max_vertical_deviation = 30.0;
+
+            if dx.abs() > min_distance && dy.abs() < max_vertical_deviation {
+               return if dx > 0.0 {
+                Some("Swipe Right")
+               } else {
+                Some("Swipe Left")
+               };
+            }
+        }
+        None
+    }
+}
+
 const MOVEMENT_SPEED: f32 = 200.0;
 
 #[macroquad::main("Fly Away")]
@@ -39,6 +66,8 @@ async fn main() {
     };
 
     let mut gameover = false;
+
+    let mut swipe = Swipe::default();
 
     loop {
         if !gameover {
@@ -64,8 +93,26 @@ async fn main() {
 
             //touches
             for touch in touches() {
-                circle.x = touch.position.x;
-                circle.y = touch.position.y;
+                match touch.phase {
+                    TouchPhase::Started => {
+                        swipe.start_position = Some(touch.position);
+                    }
+                    TouchPhase::Ended => {
+                        swipe.end_position = Some(touch.position);
+
+                        if let Some(direction) = swipe.detect() {
+                            draw_text(direction, screen_width() / 2.0 - 100.0, screen_height() / 2.0, 40.0, YELLOW);
+                        }
+
+
+                        swipe.start_position = None;
+                        swipe.end_position = None;
+ 
+
+                    }
+                    _ => {}
+
+                }
             }
             //end touches
 
