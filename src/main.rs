@@ -62,6 +62,22 @@ async fn main() {
                 circle.y -= MOVEMENT_SPEED * delta_time;
             }
 
+            //touches
+            for touch in touches() {
+                draw_circle(touch.position.x, touch.position.y, 30.0, GREEN);
+                draw_text(
+                    &format!(
+                        "ID: {}, Phase: {:?}, Pos: ({:.1},{:.1})",  
+                        touch.id, touch.phase, touch.position.x, touch.position.y
+                        ),
+                        touch.position.x,
+                        touch.position.y - 40.0,
+                        20.0,
+                        WHITE,
+                );
+            }
+            //end touches
+
             circle.x = clamp(circle.x, 0.0, screen_width());
             circle.y = clamp(circle.y, 0.0, screen_height());
 
