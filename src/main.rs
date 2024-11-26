@@ -109,7 +109,6 @@ async fn main() {
 
                         swipe.start_position = None;
                         swipe.end_position = None;
- 
 
                     }
                     _ => {}
