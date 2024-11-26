@@ -38,7 +38,7 @@ impl Swipe {
             let dx = end.x - start.x;
             let dy = end.y - start.y;
 
-            let min_distance = 5.0;
+            let min_distance = 500.0;
             let max_vertical_deviation = 30.0;
 
             if dx < 0.0 {
