@@ -104,6 +104,8 @@ async fn main() {
                             draw_text(direction, screen_width() / 2.0 - 100.0, screen_height() / 2.0, 40.0, YELLOW);
                         }
 
+                        circle.x += MOVEMENT_SPEED * delta_time;
+                        circle.y += MOVEMENT_SPEED * delta_time;
 
                         swipe.start_position = None;
                         swipe.end_position = None;
