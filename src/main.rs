@@ -1,5 +1,8 @@
 use macroquad::prelude::*;
 
+const LEFT: f32 = 2.0;
+const RIGHT: f32 = 3.0;
+
 struct Shape {
     size: f32,
     speed: f32,
@@ -30,7 +33,7 @@ struct Swipe {
 }
 
 impl Swipe {
-    fn detect(&self) -> Option<&'static str> {
+    fn detect(&self) -> f32  {
         if let (Some(start), Some(end)) = (self.start_position, self.end_position) {
             let dx = end.x - start.x;
             let dy = end.y - start.y;
@@ -38,15 +41,28 @@ impl Swipe {
             let min_distance = 50.0;
             let max_vertical_deviation = 30.0;
 
+            if dx < 0.0 {
+                return LEFT;
+            }
+
+            if dx > 0.0 {
+                return RIGHT;
+            }
+
+            /*
             if dx.abs() > min_distance && dy.abs() < max_vertical_deviation {
                return if dx > 0.0 {
-                Some("Swipe Right")
+                //Some("Swipe Right")
+                return RIGHT;
                } else {
-                Some("Swipe Left")
+                //Some("Swipe Left")
+                return LEFT;
                };
             }
+            */
+
         }
-        None
+        0.0 
     }
 }
 
@@ -101,17 +117,23 @@ async fn main() {
                         swipe.end_position = Some(touch.position);
 
 
+                        /*
                         if let Some(direction) = swipe.detect() {
                             draw_text(direction, screen_width() / 2.0 - 100.0, screen_height() / 2.0, 40.0, RED);
                         }
+                        */
+
+                        let dir: f32 = swipe.detect();
+                        if dir == RIGHT {
+                            circle.x += MOVEMENT_SPEED * delta_time;
+                        } else if dir == LEFT {
+                            circle.x -= MOVEMENT_SPEED * delta_time;
+                        }
                         
                         
-                        circle.x += MOVEMENT_SPEED * delta_time;
-                        //circle.y += MOVEMENT_SPEED * delta_time;
 
                         swipe.start_position = None;
                         swipe.end_position = None;
-                        break;
 
                     }
                     _ => {}
