@@ -131,6 +131,35 @@ async fn main() {
         true,
     );
     bullet_sprite.set_animation(1);
+
+    let mut ship_sprite = AnimatedSprite::new(
+        16,
+        24,
+        &[
+            Animation {
+                name: "idle".to_string(),
+                row: 0,
+                frames: 2,
+                fps: 12,
+            },
+
+            Animation {
+                name: "left".to_string(),
+                row: 2,
+                frames: 2,
+                fps: 12,
+            },
+
+            Animation {
+                name: "right".to_string(),
+                row: 4,
+                frames: 2,
+                fps: 12,
+            },
+        ],
+        true,
+    );
+
     
 
 
@@ -181,14 +210,19 @@ async fn main() {
             GameState::Playing => {
                 let delta_time = get_frame_time();
 
+
+                ship_sprite.set_animation(0);
+
                 if is_key_down(KeyCode::Right) || is_key_down(KeyCode::D) {
                     circle.x += MOVEMENT_SPEED * delta_time;
                     direction_modifier += 0.05 * delta_time;
+                    ship_sprite.set_animation(2);
                 }
 
                 if is_key_down(KeyCode::Left) || is_key_down(KeyCode::A) {
                     circle.x -= MOVEMENT_SPEED * delta_time;
                     direction_modifier -= 0.05 * delta_time;
+                    ship_sprite.set_animation(1);
                 }
 
                 if is_key_down(KeyCode::Down) || is_key_down(KeyCode::S) {
@@ -235,6 +269,7 @@ async fn main() {
                     bullet.y -= bullet.speed * delta_time;
                 }
 
+                ship_sprite.update();
                 bullet_sprite.update();
 
                 squares.retain(|square| square.y < screen_height() + square.size);
@@ -286,6 +321,19 @@ async fn main() {
 
 
                 draw_circle(circle.x, circle.y, circle.size / 2.0, YELLOW);
+
+                let ship_frame = ship_sprite.frame();
+                draw_texture_ex(
+                    &ship_texture,
+                    circle.x - ship_frame.dest_size.x,
+                    circle.y - ship_frame.dest_size.y,
+                    WHITE,
+                    DrawTextureParams{
+                        dest_size: Some(ship_frame.dest_size * 2.0),
+                        source: Some(ship_frame.source_rect),
+                        ..Default::default()
+                    },
+                );
 
                 for square in &squares {
                     draw_rectangle(
