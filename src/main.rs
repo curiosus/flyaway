@@ -1,6 +1,7 @@
 use macroquad::prelude::*;
 use macroquad_particles::{self as particles, AtlasConfig, Emitter, EmitterConfig};
 use macroquad::experimental::animation::{AnimatedSprite, Animation};
+use macroquad::audio::{load_sound, play_sound, play_sound_once, PlaySoundParams};
 use std::fs;
 
 const FRAGMENT_SHADER: &str = include_str!("starfield-shader.glsl");
@@ -180,7 +181,17 @@ async fn main() {
         true,
     );
 
+    let theme_music = load_sound("8bit-spaceshooter.ogg").await.unwrap();
+    let sound_explosion = load_sound("explosion.wav").await.unwrap();
+    let sound_laser = load_sound("laser.wav").await.unwrap();
     
+    play_sound(
+        &theme_music,
+        PlaySoundParams {
+            looped: true,
+            volume: 1.,
+        },
+    );
 
 
     loop {
@@ -261,6 +272,7 @@ async fn main() {
                         size: 32.0,
                         collided: false,
                     });
+                    play_sound_once(&sound_laser);
                 }
 
                 if is_key_pressed(KeyCode::Escape) {
@@ -323,6 +335,7 @@ async fn main() {
                                 }),
                                 vec2(square.x, square.y),
                             ));
+                            play_sound_once(&sound_explosion);
                         }
                     }
                 }
