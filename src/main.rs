@@ -365,7 +365,7 @@ async fn main() -> Result<(), macroquad::Error> {
                 for touch in touches() {
                     if touch.phase == TouchPhase::Moved {
                         let pos: Vec2  = touch.position;
-                        draw_circle(pos.x, pos.y, 5.0, BLUE);
+                        draw_circle(screen_width() / 2.0, screen_height() / 2.0, 10.0, RED);
 
                     }
                     /*
