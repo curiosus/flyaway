@@ -364,8 +364,9 @@ async fn main() -> Result<(), macroquad::Error> {
 
                 for touch in touches() {
                     if touch.phase == TouchPhase::Moved {
-                        let x = touch.position;
-                        println!("x is {}", x);
+                        let pos: Vec2  = touch.position;
+                        draw_circle(pos.x, pos.y, 5.0, BLUE);
+
                     }
                     /*
                     let (fill_color, size) = match touch.phase {
