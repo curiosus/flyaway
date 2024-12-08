@@ -362,23 +362,21 @@ async fn main() -> Result<(), macroquad::Error> {
                 let delta_time = get_frame_time();
 
 
-
-
-        for touch in touches() {
-            let (fill_color, size) = match touch.phase {
-                TouchPhase::Started => (GREEN, 80.0),
-                TouchPhase::Stationary => (WHITE, 60.0),
-                TouchPhase::Moved => (YELLOW, 60.0),
-                TouchPhase::Ended => (BLUE, 80.0),
-                TouchPhase::Cancelled => (BLACK, 80.0),
-            };
-            draw_circle(touch.position.x, touch.position.y, size, fill_color);
-        }
-
-        draw_text("touch the screen!", 20.0, 20.0, 20.0, DARKGRAY);
-
-
-
+                for touch in touches() {
+                    if touch.phase == TouchPhase::Moved {
+                        let x = touch.position;
+                        println!("x is {}", x);
+                    }
+                    /*
+                    let (fill_color, size) = match touch.phase {
+                        TouchPhase::Started => (GREEN, 80.0),
+                        TouchPhase::Stationary => (WHITE, 60.0),
+                        TouchPhase::Moved => (YELLOW, 60.0),
+                        TouchPhase::Ended => (BLUE, 80.0),
+                        TouchPhase::Cancelled => (BLACK, 80.0),
+                    };
+                    */
+                }
 
 
                 ship_sprite.set_animation(0);

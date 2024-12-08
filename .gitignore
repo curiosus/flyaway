@@ -1,3 +1,11 @@
 /target
 .idea
 highscore.dat
+dist/
+flyaway
+flyaway-linux.tar
+flyaway-windows.zip
+flyaway-windows/
+flyaway.exe
+flyaway.zip
+
