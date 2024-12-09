@@ -309,6 +309,8 @@ async fn main() -> Result<(), macroquad::Error> {
     root_ui().push_skin(&resources.ui_skin);
     let window_size = vec2(370.0, 320.0);
 
+    let mut start_pos = None;
+
     loop {
         clear_background(BLACK);
 
@@ -358,37 +360,59 @@ async fn main() -> Result<(), macroquad::Error> {
 
             },
 
+
             GameState::Playing => {
                 let delta_time = get_frame_time();
 
+                let mut swipe_left: bool = false;
+                let mut swipe_right: bool = false;
 
                 for touch in touches() {
-                    if touch.phase == TouchPhase::Moved {
-                        let pos: Vec2  = touch.position;
-                        draw_circle(screen_width() / 2.0, screen_height() / 2.0, 10.0, RED);
+                    if touch.phase == TouchPhase::Started {
+                        start_pos = Some((touch.position.x, touch.position.y));
+                    } else if touch.phase == TouchPhase::Ended {
+                        if let Some(start) = start_pos {
+                            let end = (touch.position.x, touch.position.y);
+                            let dx = end.0 - start.0;
+                            let dy = end.1 - start.1;
 
+                            if dx.abs() > dy.abs() {
+                                //Horizontal swipe
+                                if dx > 0.0 {
+                                    //swipe right
+                                    swipe_right = true;
+                                } else {
+                                    //swipe left
+                                    swipe_left = true;
+                                }
+                            } else {
+                                //vertical swipe
+                                if dy > 0.0 {
+                                    //swipe down
+                                } else {
+                                    //swipe up
+                                }
+                            }
+                        }
+
+                        start_pos = None;
+                            
                     }
-                    /*
-                    let (fill_color, size) = match touch.phase {
-                        TouchPhase::Started => (GREEN, 80.0),
-                        TouchPhase::Stationary => (WHITE, 60.0),
-                        TouchPhase::Moved => (YELLOW, 60.0),
-                        TouchPhase::Ended => (BLUE, 80.0),
-                        TouchPhase::Cancelled => (BLACK, 80.0),
-                    };
-                    */
+
                 }
+
+
 
 
                 ship_sprite.set_animation(0);
 
-                if is_key_down(KeyCode::Right) || is_key_down(KeyCode::D) {
+                if is_key_down(KeyCode::Right) || is_key_down(KeyCode::D) || swipe_right {
                     circle.x += MOVEMENT_SPEED * delta_time;
                     direction_modifier += 0.05 * delta_time;
                     ship_sprite.set_animation(2);
                 }
 
-                if is_key_down(KeyCode::Left) || is_key_down(KeyCode::A) {
+                if is_key_down(KeyCode::Left) || is_key_down(KeyCode::A) || swipe_left {
                     circle.x -= MOVEMENT_SPEED * delta_time;
                     direction_modifier -= 0.05 * delta_time;
                     ship_sprite.set_animation(1);
